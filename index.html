@@ -3,15 +3,132 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
+    <title>Train Times!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 <body>
-    
+    <div class="jumbotron">
+        <h1 class="text-center" >Anytime is Train Time!</h1>
+        <p class="text-center">Choo Choo. Chee Chee.</p>
+    </div>
+    <!-- create bootstrap for train time list -->
+
+    <!-- taken from week 4 day 2 activity 19 to create submission form for train -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                  Add Train!
+                </div>
+                <div class="card-body">
+      
+                  <!-- Sign-up Form (note the various input "types")-->
+                  <form role="form">
+                    <div class="form-group row">
+                      <label for="trainname-input">Train Name</label>
+                      <input class="form-control" id="trainname-input" type="text">
+                    </div>
+                    <div class="form-group row">
+                      <label for="destination-input">Destination</label>
+                      <input class="form-control" id="destination-input" type="text">
+                    </div>
+                    <div class="form-group row">
+                      <label for="firsttraintime-input">First Train Time (HH:mm - military time)</label>
+                      <input class="form-control" id="firsttraintime-input" type="text">
+                    </div>
+                    <div class="form-group row">
+                      <label for="frequency-input">Frequency (min)</label>
+                      <input class="form-control" id="frequency-input" type="number">
+                    </div>
+                    <button class="btn btn-default" id="add-user" type="submit">Submit</button>
+                  </form>
+      
+                </div>
+              </div>
+            </div>
 </body>
+    <style>
+        .jumbotron {
+            background-color: brown;
+            color: white;
+        }
+    </style>
     <script>
+        
+
+        //firebase initialization and config
+        var config = {
+        apiKey: "AIzaSyCUYlc_a48xL_n2jCu1DeIz1b01-CpuySs",
+        authDomain: "traintimehomework7.firebaseapp.com",
+        databaseURL: "https://traintimehomework7.firebaseio.com",
+        projectId: "traintimehomework7",
+        storageBucket: "",
+        messagingSenderId: "644154089745"
+        };
+
+        firebase.initializeApp(config);  
+
+    //current date and time 
+    console.log(moment().format("DD/MM/YY hh:mm A"));
+
+
+    //vvv *assigntment 21* train time telling example* vvv
+    var tFrequency = 3;
+    // Time is 3:30 AM
+    var firstTime = "03:30";
+
+    // First Time (pushed back 1 year to make sure it comes before current time)
+    var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "years");
+    console.log(firstTimeConverted);
+
+    // Current Time
+    var currentTime = moment();
+    console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+
+    // Difference between the times
+    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+    console.log("DIFFERENCE IN TIME: " + diffTime);
+
+    // Time apart (remainder)
+    var tRemainder = diffTime % tFrequency;
+    console.log(tRemainder);
+
+    // Minute Until Train
+    var tMinutesTillTrain = tFrequency - tRemainder;
+    console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
+
+    // Next Train
+    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
     
+    //initialize variables to store data for train information
+    var trainName = "";
+    var destination = "";
+    var firstTrainTime = "";
+    var frequency = 0;
+
+    //grab element by id from document and set value to initialized variables
+    var trainName = $("#trainname-input").val().trim();
+    var destination = $("#destination-input").val().trim();
+    var firstTrainTime = $("#firsttraintime-input").val().trim();
+    var frequency = $("#frequency-input").val().trim();
+
+    //push data to firebase
+    dataRef.ref().push({
+        trainName: trainName,
+        destination: destination,
+        firstTrainTime: firstTrainTime,
+        frequency: frequency,
+    });
+    //onclick "submit" send data inputs (trainname, destiination, firsttraintime, frequency) to firebase
+    
+
+    //grab data from firebase and display train information in "current train schedule"
+
+    //use moment.js to dynamically format train time based arrival time
+
+
     </script>
 </html>
